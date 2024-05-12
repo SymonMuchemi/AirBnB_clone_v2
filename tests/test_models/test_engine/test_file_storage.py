@@ -107,3 +107,31 @@ class test_fileStorage(unittest.TestCase):
         from models.engine.file_storage import FileStorage
         print(type(storage))
         self.assertEqual(type(storage), FileStorage)
+
+    def test_delete_existing(self):
+        """ object is properly deleted """
+        new = BaseModel()
+        new.save()
+        initial_count = len(storage.all())
+        storage.delete(new)
+        final_count = len(storage.all())
+        self.assertNotEqual(initial_count, final_count)
+
+    def test_delete_none(self):
+        """ should not delete anything if None is passed as obj"""
+        initial_count = len(storage.all())
+        storage.delete(None)
+        final_count = len(storage.all())
+        self.assertEqual(final_count, initial_count)
+
+    def test_type_after_deletion(self):
+        """ the data should not change after deletion """
+        new = BaseModel()
+        new.save()
+        storage.delete(new)
+        self.assertIsInstance(storage.all(), dict)
+
+    def test_all_dict_has_only_specified_class_obj(self):
+        """ the dict return contains only objects of the specified class """
+        for value in storage.all(BaseModel).values():
+            self.assertIsInstance(None, value)
