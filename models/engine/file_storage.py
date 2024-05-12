@@ -12,13 +12,12 @@ class FileStorage:
         """Returns a dictionary of models currently in storage"""
         if cls is None:
             return FileStorage.__objects
-        temp = {}
-        for key in FileStorage.__objects.keys():
-            class_name = key.split('.')[0]
-            if class_name == cls:
-                temp[key] = FileStorage.__objects[key]
+        else:
+            return {
+                key: val for key, val in self.__objects.items() \
+                if key.split('.')[0] == cls
+            }
 
-        return temp
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -35,27 +34,10 @@ class FileStorage:
 
     def delete(self, obj=None):
         """deletes an object from the file storage"""
-        classes = [
-            'BaseModel', 'User', 'Place',
-            'State', 'City', 'Amenity',
-            'Review'
-        ]
-        # get the class name
-        cls = obj.__class__.__name__
-
-        if cls not in classes:
-            return
-
-        id = obj.to_dict()['id']
-        # since items are stored using classname.id as the key
-        key_to_delete = cls + "." + id
-        with open(FileStorage.__file_path, 'r') as f:
-            data = json.load(f)
-        if key_to_delete in data:
-            del data[key_to_delete]
-        # write the changes
-        with open(FileStorage.__file_path, 'w') as f:
-            json.dump(data, f)
+        if obj is not None:
+            key = obj.__class__.__name__ + '.' + obj.id
+            if key in self.__objects:
+                del self.__objects[key]
 
     def reload(self):
         """Loads storage dictionary from file"""
