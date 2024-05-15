@@ -134,4 +134,4 @@ class test_fileStorage(unittest.TestCase):
     def test_all_dict_has_only_specified_class_obj(self):
         """ the dict return contains only objects of the specified class """
         for value in storage.all(BaseModel).values():
-            self.assertIsInstance(None, value)
+            self.assertIsInstance(value, storage)
