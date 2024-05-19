@@ -68,6 +68,12 @@ class test_basemodel(unittest.TestCase):
         n = i.to_dict()
         self.assertEqual(i.to_dict(), n)
 
+    def test_todict_contains_no_sa_instance_state_key(self):
+        """dict should not contain the sa_instance_state key"""
+        i = self.value()
+        n = i.to_dict()
+        self.assertNotIn('_sa_instance_state', n)
+
     def test_kwargs_none(self):
         """ """
         n = {None: None}
