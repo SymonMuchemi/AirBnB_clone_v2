@@ -15,7 +15,7 @@ class FileStorage:
         else:
             return {
                 key: val for key, val in self.__objects.items() \
-                if key.split('.')[0] == cls
+                if type(val) == cls
             }
 
     def new(self, obj):
