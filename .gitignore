@@ -1,5 +1,6 @@
 .gitignore
 .idea/dataSources.xml
 .idea/sqldialects.xml
-models/__pycache__
+*__pycache__*
+models/engine/__pycache__/*.pyc
 *.pyc
