@@ -1,59 +1,44 @@
-#!/usr/bin/env bash
-# sets up the web servers for the deployment of web_static
+#!/bin/bash
+# Install Nginx if it is not already installed
+if ! dpkg -l | grep -q nginx; then
+    sudo apt-get update
+    sudo apt-get install -y nginx
+fi
 
-# update packages
-apt update -y
+# Create necessary directories
+sudo mkdir -p /data/web_static/releases/test
+sudo mkdir -p /data/web_static/shared
 
-# install nginx if not installed
-apt install nginx -v
+# Create a fake HTML file
+echo "<html>
+  <head>
+  </head>
+  <body>
+    Holberton School
+  </body>
+</html>" | sudo tee /data/web_static/releases/test/index.html > /dev/null
 
-# create data folder
-mkdir -p /data/
+# Create a symbolic link
+if sudo [ -L /data/web_static/current ]; then
+    sudo rm /data/web_static/current
+fi
+sudo ln -s /data/web_static/releases/test /data/web_static/current
 
-# create web_static folder
-mkdir -p /data/web_static/
+# Give ownership of /data to the ubuntu user and group
+sudo chown -R ubuntu:ubuntu /data
 
-# create releases folder
-mkdir -p /data/web_static/releases
-
-# create shared folder
-mkdir -p /data/web_static/shared
-
-# create test folder
-mkdir -p /data/web_static/releases/test
-
-# create fake file
-echo "Web static dummy file" > /data/web_static/releases/test/index.html
-
-# create symbolic link and delete it if it already exists
-ln -sf /data/web_static/releases/test/ /data/web_static/current
-
-# give ownership of /data/ directory to the ubuntu user and group
-sudo chown -R ubuntu:ubuntu /data/web_static/
-sudo chmod -R 755 /data/web_static/
-
-printf %s "
+# Update Nginx configuration
+sudo tee /etc/nginx/sites-available/default > /dev/null <<EOL
 server {
-        listen 80 default_server;
-        listen [::]:80 default_server;
-        root /etc/nginx/html;
-        index index.html index.htm;
+    listen 80;
+    server_name localhost;
 
-        location /redirect_me {
-                return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-        }
-        error_page 404 /404.html;
-        location /404 {
-            root /usr/share/nginx/html;
-            internal;
-        }
-
-        location /hbnb_static {
-		alias /data/web_static/current/;
-		autoindex on;
-	}
+    location /hbnb_static {
+        alias /data/web_static/current;
+        index index.html;
+    }
 }
-" > /etc/nginx/sites-available/default
+EOL
 
-# restart nginx for changes to be applied
-systemctl restart nginx.service
+# Restart Nginx
+sudo service nginx restart
