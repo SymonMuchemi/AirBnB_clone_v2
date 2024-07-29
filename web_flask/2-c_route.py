@@ -25,7 +25,6 @@ def hbnb():
 def c_string(text):
     """Displays a special C string"""
     return f"C {text.replace('_', ' ')}"
-    
 
 
 if __name__ == "__main__":
