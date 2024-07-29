@@ -30,7 +30,7 @@ def c_string(text):
 
 @app.route('/python', strict_slashes=False)
 @app.route('/python/<string:text>', strict_slashes=False)
-def python_route(text='is fun'):
+def python_route(text='is cool'):
     """python route
 
     Args:
