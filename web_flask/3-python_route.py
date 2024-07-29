@@ -28,9 +28,9 @@ def c_string(text):
     return f"C {text.replace('_', ' ')}"
 
 
-@app.route('/python/', defaults={'text': 'is fun'}, strict_slashes=False)
+@app.route('/python/', strict_slashes=False)
 @app.route('/python/<string:text>', strict_slashes=False)
-def python_route(text):
+def python_route(text='is fun'):
     """python route
 
     Args:
