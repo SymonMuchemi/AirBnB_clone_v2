@@ -58,3 +58,6 @@ class DBStorage:
             for obj in list_of_obj:
                 instance_objs[cls + "." + obj.id] = obj
         return instance_objs
+
+    def close(self):
+        self.__session.remove()
