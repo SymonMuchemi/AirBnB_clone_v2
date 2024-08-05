@@ -45,20 +45,28 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """returns a dictionary of all object of a class cls
-        if cls in None, a dictionary of all objects of all classes is returned
         """
+        Retrieve all objects from the database.
+        Args:
+            cls (str or type, optional): The class name or class object to filter the objects. Defaults to None.
+        Returns:
+            dict: A dictionary containing the retrieved objects, where the keys are in the format "ClassName.object_id".
+        """
+        
         obj_dict = {}
-        if cls is not None and cls in DBStorage:
-            cls_objs = self.__session.query(cls).all()
-            for obj in cls_objs:
-                obj_dict[cls + "." + obj.id] = obj
-        instance_objs = {}
-        for cls_obj in DBStorage.classes:
-            list_of_obj = self.__session().query(cls_obj)
-            for obj in list_of_obj:
-                instance_objs[cls + "." + obj.id] = obj
-        return instance_objs
+        if cls is not None:
+            if isinstance(cls, str) and cls in self.classes:
+                cls = self.classes[cls]
+            if cls in self.classes.values():
+                class_objects = self.__session.query(cls).all()
+                for obj in class_objects:
+                    obj_dict[cls.__name__ + "." + obj.id] = obj
+        else:
+            for cls_name, cls_obj in self.classes.items():
+                list_of_obj = self.__session.query(cls_obj).all()
+                for obj in list_of_obj:
+                    obj_dict[cls_name + "." + obj.id] = obj
+        return obj_dict
 
     def new(self, obj):
         """adds obj to current db session"""
