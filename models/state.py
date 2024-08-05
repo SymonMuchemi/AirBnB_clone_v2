@@ -23,7 +23,8 @@ class State(BaseModel):
     if storage_type != "db":
         @property
         def cities(self):
-            """returns the list of city instance with state_id same as current state.id"""
+            """returns the list of city instance with state_id same
+            as current state.id"""
             from models import storage
             from city import City
             cities = []
