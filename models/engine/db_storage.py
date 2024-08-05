@@ -60,4 +60,5 @@ class DBStorage:
         return instance_objs
 
     def close(self):
+        """calls remove() method on the private session attr"""
         self.__session.remove()
