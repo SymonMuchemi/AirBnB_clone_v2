@@ -59,6 +59,18 @@ class DBStorage:
                 instance_objs[cls + "." + obj.id] = obj
         return instance_objs
 
+    def new(self, obj):
+        """adds obj to current db session"""
+        self.__session.add(obj)
+
+    def save(self):
+        """saves all changes to the current db session"""
+        self.__session.commit()
+
+    def delete(self, obj=None):
+        """removes obj or nothing from the current db session"""
+        self.__session.delete(obj)
+
     def close(self):
         """calls remove() method on the private session attr"""
         self.__session.remove()
