@@ -11,6 +11,7 @@ from models.amenity import Amenity
 from models.review import Review
 from models.place import Place
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import scoped_session
 
 
 class DBStorage:
@@ -69,7 +70,15 @@ class DBStorage:
 
     def delete(self, obj=None):
         """removes obj or nothing from the current db session"""
-        self.__session.delete(obj)
+        if obj is not None:
+            self.__session.delete(obj)
+
+    def reload(self):
+        """reloads db data"""
+        Base.metadata.create_all(self.__engine)
+        sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(sess_factory)
+        self.__session = Session
 
     def close(self):
         """calls remove() method on the private session attr"""
