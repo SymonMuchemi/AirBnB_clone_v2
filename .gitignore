@@ -6,4 +6,4 @@ models/engine/__pycache__/*.pyc
 *.pyc
 venv/
 fabfile.py
-
+.vscode/*
