@@ -1,9 +1,2 @@
-.gitignore
-.idea/dataSources.xml
-.idea/sqldialects.xml
-*__pycache__*
-models/engine/__pycache__/*.pyc
 *.pyc
 venv/
-fabfile.py
-.vscode/*
