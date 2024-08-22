@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """Simple program script"""
 from flask import Flask
-from flask import url_for
 from flask import render_template
 from models import storage
 from models.state import State
