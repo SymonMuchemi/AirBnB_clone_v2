@@ -15,6 +15,7 @@ def remove_sql_session(exception):
     """
     storage.close()
 
+
 @app.route('/states_list', strict_slashes=False)
 def list_states():
     # states = sorted(list(storage.all(State).values()), key=lambda x: x.name)
